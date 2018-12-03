@@ -35,6 +35,21 @@
   (let [f (cap 10)]
     (println* (f 1))))
 
+;; Examples 4b and 4c, more capturing
+
+(defn example-4b []
+  (let [f (fn [x] ((fn [y] (+ x y))
+                   40))]
+    (println* (f 400))))
+
+;; This doesn't work yet
+;;(defn example-4c []
+;;  (let [f (fn [x] ((fn [y] ((fn [z] (+ x (+ y z)))
+;;                            4))
+;;                   40))]
+;;    (println* (f 400))))
+
+
 ;; Example 5, map value over functions
 ;; (defn example-5 [x]
 ;;   (Array.endo-map ??? [inc dec (fn [_] x)]))
@@ -72,6 +87,7 @@
   (example-2)
   ;;(example-3)
   (example-4)
+  (example-4b)
   ;;(example-5)
   (example-6)
   (example-7)
