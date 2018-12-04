@@ -196,9 +196,13 @@ toC toCMode root = emitterSrc (execState (visit startingIndent root) (EmitterSta
                  when needEnv $
                    do appendToSrc (addIndent indent ++ tyToC lambdaEnvType ++ " *" ++ lambdaEnvName ++
                                    " = CARP_MALLOC(sizeof(" ++ tyToC lambdaEnvType ++ "));\n")
-                      mapM_ (\(XObj (Sym path _) _ _) ->
-                               appendToSrc (addIndent indent ++ lambdaEnvName ++ "->" ++
-                                            pathToC path ++ " = " ++ pathToC path ++ ";\n"))
+                      mapM_ (\(XObj sym@(Sym path _) _ _) ->
+                             -- TODO: need to propagate the info here whether sym is our local or needs to be looked up in the env
+                             let ref = if False
+                                       then "_env->" ++ pathToC path
+                                       else pathToC path
+                             in appendToSrc (addIndent indent ++ lambdaEnvName ++ "->" ++
+                                                       pathToC path ++ " = " ++ pathToC path ++ ";\n"))
                         capturedVars
                  appendToSrc (addIndent indent ++ "Lambda " ++ retVar ++ " = {\n")
                  appendToSrc (addIndent indent ++ "  .callback = " ++ callbackMangled ++ ",\n")
